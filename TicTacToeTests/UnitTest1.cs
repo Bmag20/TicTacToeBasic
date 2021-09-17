@@ -1,4 +1,4 @@
-using System;
+using TicTacToeBasic;
 using Xunit;
 
 namespace TicTacToeTests
@@ -10,7 +10,7 @@ namespace TicTacToeTests
         {
             Board board = new Board();
             var result = board.GetCells();
-            Assert.Equal(result, new char[3, 3]{{'.', '.', '.'}, {'.', '.', '.'}, {'.', '.', '.'}});
+            Assert.Equal(result, new char[,]{{'.', '.', '.'}, {'.', '.', '.'}, {'.', '.', '.'}});
         }
     }
 }
