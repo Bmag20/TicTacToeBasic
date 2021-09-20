@@ -15,9 +15,9 @@ namespace TicTacToeBasic
             return _cells;
         }
 
-        public void Move(int x, int y)
+        public void Move(int x, int y, char token)
         {
-            _cells[x - 1, y - 1] = 'X';  // Make it a constant
+            _cells[x - 1, y - 1] = token;
         }
     }  
 }
