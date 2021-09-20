@@ -17,8 +17,18 @@ namespace TicTacToeBasic
 
         public void Move(int x, int y, char token)
         {
-            if (_cells[x-1, y-1].Equals('.'))
+            if (IsValidSlot(x, y) && IsEmptySlot(x, y))
                 _cells[x - 1, y - 1] = token;
+        }
+
+        private static bool IsValidSlot(int x, int y)
+        {
+            return (x is > 0 and <= 3 && y is > 0 and <= 3);
+        }
+
+        private bool IsEmptySlot(int x, int y)
+        {
+            return (_cells[x - 1, y - 1].Equals('.'));
         }
     }  
 }
