@@ -17,7 +17,8 @@ namespace TicTacToeBasic
 
         public void Move(int x, int y, char token)
         {
-            _cells[x - 1, y - 1] = token;
+            if (_cells[x-1, y-1].Equals('.'))
+                _cells[x - 1, y - 1] = token;
         }
     }  
 }

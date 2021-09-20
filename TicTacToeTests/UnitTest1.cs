@@ -44,5 +44,20 @@ namespace TicTacToeTests
             // Assert
             Assert.Equal(firstBoard, actualBoard);
         }
+        
+        [Fact]
+        public void Player_selecting_invalid_slot_does_not_change_the_board()
+        {
+            // Arrange
+            Board board = new Board();
+            var firstBoard = (char[,])board.GetCells().Clone();
+            // Act
+            board.Move(1, 5, 'O');
+            var actualBoard = (char[,])board.GetCells().Clone();
+            // Assert
+            Assert.Equal(firstBoard, actualBoard);
+        }
+        
+        
     }
 }
