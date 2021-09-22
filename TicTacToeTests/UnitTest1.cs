@@ -1,3 +1,4 @@
+using Moq;
 using TicTacToeBasic;
 using Xunit;
 
@@ -5,59 +6,146 @@ namespace TicTacToeTests
 {
     public class UnitTest1
     {
+        private static readonly IOutputWriter OutputWriter = new ConsolePrinter();
+        private static readonly IInputReader InputReader = new ConsoleReader();
+        readonly Game game = new Game(OutputWriter, InputReader);
+        
+        // Size of the board - delete
         [Fact]
-        public void New_board_is_empty()
+        public void Board_isOfSize3by3()
         {
-            Board board = new Board();
-            var result = board.GetCells();
-            Assert.Equal(result, new char[,]{{'.', '.', '.'}, {'.', '.', '.'}, {'.', '.', '.'}});
+            Board board = new Board(3);
+            Assert.Equal(3, board.GetCells().GetLength(0));
+            Assert.Equal(3, board.GetCells().GetLength(1));
         }
         
         [Fact]
-        public void Player1_selecting_empty_slot_on_board_changes_the_slot_with_player1_token()
+        public void NewBoard_isEmpty()
         {
-            Board board = new Board();
-            board.Move(1, 1, 'X');
+            Board board = new Board(3);
             var result = board.GetCells();
-            Assert.Equal(result, new char[3,3] { {'X', '.', '.'}, {'.', '.', '.'}, {'.', '.', '.'}});
+            // compare 2d array
+            Assert.Equal(Token.None, result[0, 0]);
         }
         
         [Fact]
-        public void Player2_selecting_empty_slot_on_board_changes_the_slot_with_player2_token()
+        public void PlacingTokenOnEmptySlot_changesStateOfTheCell()
         {
-            Board board = new Board();
-            board.Move(1, 1, 'O');
+            Board board = new Board(3);
+            board.PlaceToken(1, 1, Token.X);
             var result = board.GetCells();
-            Assert.Equal(result, new char[3,3] { {'O', '.', '.'}, {'.', '.', '.'}, {'.', '.', '.'}});
+            Assert.Equal(Token.X, result[0, 0]);
         }
-        
+
         [Fact]
-        public void Player_selecting_occupied_slot_does_not_change_the_board()
+        public void PlacingTokenOnOccupiedSlot_doesNotChangeStateOfTheCell()
         {
             // Arrange
-            Board board = new Board();
-            board.Move(1, 1, 'X');
-            var firstBoard = (char[,])board.GetCells().Clone();
+            Board board = new Board(3);
+            board.PlaceToken(1, 1, Token.X);
+            var firstBoard = (Token[,])board.GetCells().Clone();
             // Act
-            board.Move(1, 1, 'O');
-            var actualBoard = (char[,])board.GetCells().Clone();
+            board.PlaceToken(1, 1, Token.O);
+            var actualBoard = (Token[,])board.GetCells().Clone();
             // Assert
             Assert.Equal(firstBoard, actualBoard);
         }
         
+        // add boundary case
+        
         [Fact]
-        public void Player_selecting_invalid_slot_does_not_change_the_board()
+        public void PlacingTokenOnInvalidSlot_doesNotChangeStateOfTheCell()
         {
             // Arrange
-            Board board = new Board();
-            var firstBoard = (char[,])board.GetCells().Clone();
+            Board board = new Board(3);
+            var firstBoard = (Token[,])board.GetCells().Clone();
             // Act
-            board.Move(1, 5, 'O');
-            var actualBoard = (char[,])board.GetCells().Clone();
+            board.PlaceToken(1, 5, Token.O);
+            var actualBoard = (Token[,])board.GetCells().Clone();
             // Assert
             Assert.Equal(firstBoard, actualBoard);
         }
+
+        // System of unit - taking turns
+        // What the test is testing? - expectation
         
+        // When game is first initialised, player 1 gets to play
+        // init game 
+        // game.play(1, 2)
+        // expect the game state or board to change with token
+
+        // After first player makes a move, player 2 gets to play
+        // game init
+        // player places a token
+        // then something happns - take turns
+        // player 2 players
+
+
+
+        // [Fact]
+        //
+        // public void foo()
+        // {
+        //     IOutputWriter outputWriter = new ConsolePrinter();
+        //     IInputReader inputReader = new TestConsoleReader();
+        //     inputReader.setMockData(["1,2", "3,3", "4,3"])
+        //     Game g = new Game(outputWriter, inputReader);
+        //     g.Start();
+        //     Mock(inputReader, first).thenreturn()
+        //     // set/Moq user input in console reader and check the value of cell
+        //
+        // }
+        [Fact]
+        public void FirstRound_isPlayer1Turn()
+        {
+            // Arrange
+            game.State.Round = 1;
+            // Act
+            var result = game.IsPlayerOneTurn();
+            // Assert
+            Assert.True(result);
+        }
+        
+        [Fact]
+        public void OddRounds_arePlayer1Turns()
+        {
+            // Arrange
+            game.State.Round = 5;
+            // Act
+            var result = game.IsPlayerOneTurn();
+            // Assert
+            Assert.True(result);
+        }
+        
+        [Fact]
+        public void EvenRounds_arePlayer2Turns()
+        {
+            // Arrange
+            game.State.Round = 2;
+            // Act
+            var result = game.IsPlayerOneTurn();
+            // Assert
+            Assert.False(result);
+        }
+ 
+
+
+        [Fact]
+        public void IsWin_TokenXInFirstColumn_ReturnsTokenX()
+        {
+            // Arrange
+            Board board = new Board(3);
+            board.PlaceToken(1, 1, Token.X);
+            board.PlaceToken(2, 1, Token.X);
+            board.PlaceToken(3, 1, Token.X);
+            // Act
+            var winningToken = Determiner.IsWin(board);
+            // Assert
+            Assert.Equal(Token.X, winningToken);
+        }
+
         
     }
+
+
 }
