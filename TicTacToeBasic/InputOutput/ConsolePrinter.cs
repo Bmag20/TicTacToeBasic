@@ -1,4 +1,5 @@
 using System;
+using TicTacToeBasic.Entities;
 
 namespace TicTacToeBasic
 {
@@ -11,9 +12,9 @@ namespace TicTacToeBasic
 
         public void PrintBoard(Board board)
         {
-            for (var i = 0; i < board.Size; i++)
+            for (var i = 0; i < board.GetSize(); i++)
             {
-                for (var j = 0; j < board.Size; j++)
+                for (var j = 0; j < board.GetSize(); j++)
                 {
                     if (board.GetCells()[i, j] == Token.None)
                         Console.Write(".");

@@ -1,4 +1,4 @@
-namespace TicTacToeBasic
+namespace TicTacToeBasic.Entities
 {
     public class Player
     {

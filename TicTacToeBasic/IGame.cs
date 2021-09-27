@@ -1,3 +1,5 @@
+using TicTacToeBasic.Entities;
+
 namespace TicTacToeBasic
 {
     public interface IGame
