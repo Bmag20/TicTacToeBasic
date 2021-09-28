@@ -1,6 +1,7 @@
 using Moq;
-using TicTacToeBasic;
+using TicTacToeBasic.Entities;
 using TicTacToeBasic.InputOutput;
+using TicTacToeBasic.TicTacToeControl;
 using Xunit;
 
 namespace TicTacToeTests
@@ -11,68 +12,8 @@ namespace TicTacToeTests
         private static readonly IInputReader InputReader = new ConsoleReader();
         private static Game _ticTacToe = new Game();
         private GameController _gameController = new GameController(_ticTacToe, OutputWriter, InputReader);
-        
-        // System of unit - taking turns
-        // What the test is testing? - expectation
-        
-        // When game is first initialised, player 1 gets to play
-        // init game 
-        // game.play(1, 2)
-        // expect the game state or board to change with token
 
-        // After first player makes a move, player 2 gets to play
-        // game init
-        // player places a token
-        // then something happns - take turns
-        // player 2 players
-        
 
-        // [Fact]
-        //
-        // public void foo()
-        // {
-        //     IOutputWriter outputWriter = new ConsolePrinter();
-        //     IInputReader inputReader = new ConsoleReader();
-        //     inputReader.setMockData(["1,2", "3,3", "4,3"])
-        //     Game g = new Game(outputWriter, inputReader);
-        //     g.Start();
-        //     Mock(inputReader, first).thenreturn()
-        //     // set/Moq user input in console reader and check the value of cell
-        //
-        // }
-        [Fact]
-        public void FirstRound_isPlayer1Turn()
-        {
-            // Arrange
-            _gameController.TicTacToe.Round = 1;
-            // Act
-            var result = _gameController.IsPlayerOneTurn();
-            // Assert
-            Assert.True(result);
-        }
-        
-        [Fact]
-        public void OddRounds_arePlayer1Turns()
-        {
-            // Arrange
-            _gameController.TicTacToe.Round = 5;
-            // Act
-            var result = _gameController.IsPlayerOneTurn();
-            // Assert
-            Assert.True(result);
-        }
-        
-        [Fact]
-        public void EvenRounds_arePlayer2Turns()
-        {
-            // Arrange
-            _gameController.TicTacToe.Round = 2;
-            // Act
-            var result = _gameController.IsPlayerOneTurn();
-            // Assert
-            Assert.False(result);
-        }
- 
         [Fact]
         public void StartGame_SetsCurrentPlayerToPlayer1()
         {
@@ -80,10 +21,23 @@ namespace TicTacToeTests
             inputReaderMock.Setup(i => i.ReadPlayerInput()).Returns("q");
             _ticTacToe = new Game();
             _gameController = new GameController(_ticTacToe, OutputWriter, inputReaderMock.Object);
-            _gameController.StartGame();
+            _gameController.ConductGame();
             Assert.Equal(_ticTacToe.Player1, _gameController.CurrentPlayer);
         }
-
+        
+        [Fact]
+        public void StartGame_FirstValidInput_UpdatesBoardWithPlayer1Token()
+        {
+            var inputReaderMock = new Mock<IInputReader>();
+            inputReaderMock.SetupSequence(i => i.ReadPlayerInput()).Returns("1,1").Returns("q");
+            _ticTacToe = new Game();
+            _gameController = new GameController(_ticTacToe, OutputWriter, inputReaderMock.Object);
+            _gameController.ConductGame();
+            Assert.Equal(_ticTacToe.Player1.PlayerToken, _ticTacToe.GameBoard.GetCells()[0, 0]);
+        }
+        
+        // Invalid input? - ask player to enter inout again
+        
         [Fact]
         public void StartGame_AfterPlayer1Turn_SetsCurrentPlayerToPlayer2()
         {
@@ -91,7 +45,7 @@ namespace TicTacToeTests
             inputReaderMock.SetupSequence(i => i.ReadPlayerInput()).Returns("1,1").Returns("q");
             _ticTacToe = new Game();
             _gameController = new GameController(_ticTacToe, OutputWriter, inputReaderMock.Object);
-            _gameController.StartGame();
+            _gameController.ConductGame();
             Assert.Equal(_ticTacToe.Player2, _gameController.CurrentPlayer);
         }
 
@@ -105,7 +59,7 @@ namespace TicTacToeTests
             _ticTacToe = new Game();
             _gameController = new GameController(_ticTacToe, outputWriterMock.Object, inputReaderMock.Object);
             // Act
-            _gameController.StartGame();
+            _gameController.ConductGame();
             // Assert
             outputWriterMock.Verify(o => o.PlayerQuit("Player 1"), Times.Once);
         }
@@ -119,28 +73,11 @@ namespace TicTacToeTests
             _ticTacToe = new Game();
             _gameController = new GameController(_ticTacToe, OutputWriter, inputReaderMock.Object);
             // Act
-            _gameController.StartGame();
+            _gameController.ConductGame();
             // Assert
             Assert.True(_ticTacToe.IsEnded);
         }
         
-        [Fact]
-        public void StartGame_WhenBoardIsFull_SetsIsEndedToTrue()
-        {
-            // Arrange
-            var inputReaderMock = new Mock<IInputReader>();
-            inputReaderMock.SetupSequence(i => i.ReadPlayerInput())
-                .Returns("1,1");
-            _ticTacToe = new Game
-            {
-                Round = 9
-            };
-            _gameController = new GameController(_ticTacToe, OutputWriter, inputReaderMock.Object);
-            // Act
-            _gameController.StartGame();
-            // Assert
-            Assert.True(_ticTacToe.IsEnded);
-        }
         
         [Fact]
         public void StartGame_WhenPlayerWins_SetsIsEndedToTrue()
@@ -152,7 +89,7 @@ namespace TicTacToeTests
             _ticTacToe = new Game();
             _gameController = new GameController(_ticTacToe, OutputWriter, inputReaderMock.Object);
             // Act
-            _gameController.StartGame();
+            _gameController.ConductGame();
             // Assert
             Assert.True(_ticTacToe.IsEnded);
         }
@@ -163,13 +100,31 @@ namespace TicTacToeTests
             // Arrange
             var inputReaderMock = new Mock<IInputReader>();
             inputReaderMock.SetupSequence(i => i.ReadPlayerInput())
-                .Returns("1,1").Returns("1,2").Returns("2,1").Returns("2,2").Returns("3,1");
+                .Returns("1,1").Returns("1,2").Returns("2,1").Returns("2,2").Returns("3,2")
+                .Returns("3,1").Returns("1,3").Returns("3,3").Returns("2,3").Returns("3,1");
             _ticTacToe = new Game();
             _gameController = new GameController(_ticTacToe, OutputWriter, inputReaderMock.Object);
             // Act
-            _gameController.StartGame();
+            _gameController.ConductGame();
             // Assert
             Assert.True(_ticTacToe.IsEnded);
+        }
+        
+        [Fact]
+        public void StartGame1_WhenBoardIsFull_BoardIsFullIsPrinted()
+        {
+            // Arrange
+            var inputReaderMock = new Mock<IInputReader>();
+            inputReaderMock.SetupSequence(i => i.ReadPlayerInput())
+                .Returns("1,1").Returns("1,2").Returns("2,1").Returns("2,2").Returns("3,2")
+                .Returns("3,1").Returns("1,3").Returns("3,3").Returns("2,3").Returns("3,1");
+            var outputWriterMock = new Mock<IOutputWriter>();
+            _ticTacToe = new Game();
+            _gameController = new GameController(_ticTacToe, outputWriterMock.Object, inputReaderMock.Object);
+            // Act
+            _gameController.ConductGame();
+            // Assert
+            outputWriterMock.Verify(o => o.BoardIsFull(), Times.Once);
         }
     }
 }

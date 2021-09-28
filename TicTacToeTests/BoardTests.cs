@@ -1,5 +1,4 @@
 using System.IO;
-using TicTacToeBasic;
 using TicTacToeBasic.Entities;
 using Xunit;
 

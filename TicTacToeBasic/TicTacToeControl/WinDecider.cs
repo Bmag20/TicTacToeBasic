@@ -1,7 +1,7 @@
 using System.Linq;
 using TicTacToeBasic.Entities;
 
-namespace TicTacToeBasic
+namespace TicTacToeBasic.TicTacToeControl
 {
     public static class WinDecider
     {
