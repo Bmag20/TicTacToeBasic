@@ -1,4 +1,4 @@
-namespace TicTacToeBasic
+namespace TicTacToeBasic.InputOutput
 {
     public interface IInputReader
     {

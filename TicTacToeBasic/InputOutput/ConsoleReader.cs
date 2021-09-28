@@ -1,6 +1,6 @@
 using System;
 
-namespace TicTacToeBasic
+namespace TicTacToeBasic.InputOutput
 {
     public class ConsoleReader : IInputReader
     {

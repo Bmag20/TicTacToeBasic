@@ -9,14 +9,16 @@ namespace TicTacToeBasic
         public Player Player2 { get;  }
 
         public int Round { get; set; }
-        public Player Winner { get; set; }
+        public bool IsEnded { get; set; }
+        // public Player Winner { get; set; }
         
         public Game()
         {
             GameBoard = new Board();
-            Player1 = new Player(Token.X);
-            Player2 = new Player(Token.O);
+            Player1 = new Player(Token.X, "Player 1");
+            Player2 = new Player(Token.O, "Player 2");
             Round = 1;
+            IsEnded = false;
         }
 
 

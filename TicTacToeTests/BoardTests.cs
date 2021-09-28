@@ -8,13 +8,11 @@ namespace TicTacToeTests
     public class BoardTests
     {
         
-        // Size of the board - delete
         [Fact]
         public void Board_isOfSize3by3()
         {
             Board board = new Board();
-            Assert.Equal(3, board.GetCells().GetLength(0));
-            Assert.Equal(3, board.GetCells().GetLength(1));
+            Assert.Equal(3, board.GetSize());
         }
         
         [Fact]
@@ -42,8 +40,7 @@ namespace TicTacToeTests
             var result = board.GetCells();
             Assert.Equal(token, result[x-1, y-1]);
         }
-        
-        
+
         [Fact]
         public void PlacingTokenOnOccupiedSlot_ThrowsInvalidDataException()
         {
@@ -53,24 +50,7 @@ namespace TicTacToeTests
             // Act and Assert
             Assert.Throws<InvalidDataException>(() => board.PlaceToken(1, 1, Token.O));
         }
-        
-        // [Theory]
-        // [InlineData(0, 0, Token.O)]
-        // [InlineData(4, 4, Token.X)]
-        // [InlineData(-1, 2, Token.X)]
-        // [InlineData(1, -2, Token.X)]
-        // public void PlacingTokenOnInvalidSlot_doesNotChangeStateOfTheCell(int x, int y, Token token)
-        // {
-        //     // Arrange
-        //     Board board = new Board();
-        //     var firstBoard = (Token[,])board.GetCells().Clone();
-        //     // Act
-        //     board.PlaceToken(x, y, token);
-        //     var actualBoard = (Token[,])board.GetCells().Clone();
-        //     // Assert
-        //     Assert.Equal(firstBoard, actualBoard);
-        // }
-        
+
         [Theory]
         [InlineData(0, 0, Token.O)]
         [InlineData(4, 4, Token.X)]

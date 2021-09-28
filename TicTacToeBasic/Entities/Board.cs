@@ -24,9 +24,9 @@ namespace TicTacToeBasic.Entities
         public void PlaceToken(int x, int y, Token token)
         {
             if (!IsValidSlot(x, y))
-                throw new InvalidDataException("Invalid slot selected!");
+                throw new InvalidDataException("Oh no, invalid slot selected!");
             if (!IsEmptySlot(x, y))
-                throw new InvalidDataException($"{x},{y} is already occupied!");
+                throw new InvalidDataException($"Oh no, a piece is already at this place!");
             _cells[x - 1, y - 1] = token;
         }
 
@@ -39,6 +39,7 @@ namespace TicTacToeBasic.Entities
         {
             return (_cells[x - 1, y - 1].Equals(Token.None));
         }
+
         public Token[] GetColumn(int columnNumber)
         {
             return Enumerable.Range(0, Size).Select(x => _cells[x, columnNumber - 1]).ToArray();

@@ -1,14 +1,11 @@
 using System;
 using TicTacToeBasic.Entities;
 
-namespace TicTacToeBasic
+namespace TicTacToeBasic.InputOutput
 {
     public class ConsolePrinter : IOutputWriter
     {
-        public void PrintWelcomeMessage()
-        {
-            Console.WriteLine("Welcome to Tic Tac Toe!");
-        }
+        public void WelcomeMessage() => Console.WriteLine("Welcome to Tic Tac Toe!\nHere's the current board:");
 
         public void PrintBoard(Board board)
         {
@@ -21,8 +18,22 @@ namespace TicTacToeBasic
                     else
                         Console.Write(board.GetCells()[i, j]);
                 }
+
                 Console.WriteLine();
             }
         }
+
+        public void MoveAccepted() => Console.WriteLine("Move accepted, here's the current board:");
+        public void AnnounceWinner() => Console.WriteLine("Move accepted, well done you've won the game!");
+        public void ErrorPrompt(string errorMessage) => Console.WriteLine($"{errorMessage} Try again...");
+        public void BoardIsFull() => Console.WriteLine("All fields are taken on the board! It's a draw!!");
+
+        public void InputPrompt(Player player)
+        {
+            Console.Write($"{player.PlayerName} enter a coord x,y to place your {player.PlayerToken} " +
+                          $"or enter 'q' to give up: ");
+        }
+
+        public void PlayerQuit(string playerName) => Console.WriteLine($"You quit the game! {playerName} lost!");
     }
 }
