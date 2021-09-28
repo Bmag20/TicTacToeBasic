@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using TicTacToeBasic.Entities;
 
 namespace TicTacToeBasic
@@ -20,8 +21,9 @@ namespace TicTacToeBasic
             Round = 1;
             IsEnded = false;
         }
-
-
-        
+        public void tryMethod()
+        {
+            int a = 5;
+        }
     }
 }
