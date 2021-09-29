@@ -14,10 +14,7 @@ namespace TicTacToeBasic.InputOutput
             {
                 for (var j = 0; j < board.GetSize(); j++)
                 {
-                    if (board.GetCells()[i, j] == Token.None)
-                        Console.Write(". ");
-                    else
-                        Console.Write($"{board.GetCells()[i, j]} ");
+                    Console.Write(board.GetCells()[i, j] == Token.None ? ". " : $"{board.GetCells()[i, j]} ");
                 }
 
                 Console.WriteLine();

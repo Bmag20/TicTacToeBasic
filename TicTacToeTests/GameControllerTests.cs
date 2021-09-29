@@ -10,18 +10,20 @@ namespace TicTacToeTests
     {
         private static readonly IOutputWriter OutputWriter = new ConsolePrinter();
         private static readonly IInputReader InputReader = new ConsoleReader();
-        private static Game _ticTacToe = new Game();
-        private GameController _gameController = new GameController(_ticTacToe, OutputWriter, InputReader);
-
-
+        private static Game _ticTacToe = new();
+        private GameController _gameController = new(_ticTacToe, OutputWriter, InputReader);
+        
         [Fact]
         public void StartGame_SetsCurrentPlayerToPlayer1()
         {
+            // Arrange
             var inputReaderMock = new Mock<IInputReader>();
             inputReaderMock.Setup(i => i.ReadPlayerInput()).Returns("q");
             _ticTacToe = new Game();
             _gameController = new GameController(_ticTacToe, OutputWriter, inputReaderMock.Object);
+            // Act
             _gameController.ConductGame();
+            // Assert
             Assert.Equal(_ticTacToe.Player1, _gameController.CurrentPlayer);
         }
         
@@ -36,7 +38,7 @@ namespace TicTacToeTests
             Assert.Equal(_ticTacToe.Player1.PlayerToken, _ticTacToe.GameBoard.GetCells()[0, 0]);
         }
         
-        // Invalid input? - ask player to enter inout again
+        // Invalid input? - ask player to enter input again
         
         [Fact]
         public void StartGame_AfterPlayer1Turn_SetsCurrentPlayerToPlayer2()
@@ -118,13 +120,16 @@ namespace TicTacToeTests
             inputReaderMock.SetupSequence(i => i.ReadPlayerInput())
                 .Returns("1,1").Returns("1,2").Returns("2,1").Returns("2,2").Returns("3,2")
                 .Returns("3,1").Returns("1,3").Returns("3,3").Returns("2,3").Returns("3,1");
+            // X O X
+            // O X O
+            // O X O
             var outputWriterMock = new Mock<IOutputWriter>();
             _ticTacToe = new Game();
             _gameController = new GameController(_ticTacToe, outputWriterMock.Object, inputReaderMock.Object);
             // Act
             _gameController.ConductGame();
             // Assert
-            outputWriterMock.Verify(o => o.BoardIsFull(), Times.Once);
+            outputWriterMock.Verify(ow => ow.BoardIsFull(), Times.Once);
         }
     }
 }

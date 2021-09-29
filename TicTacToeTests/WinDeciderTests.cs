@@ -18,8 +18,6 @@ namespace TicTacToeTests
             Assert.False(result);
         }
 
-       
-
         [Fact]
         public void IsWinner_SameTokenInFirstColumn_ReturnsTrue()
         {

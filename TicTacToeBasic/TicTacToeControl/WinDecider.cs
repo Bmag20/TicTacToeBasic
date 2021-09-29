@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using TicTacToeBasic.Entities;
 
@@ -40,7 +41,7 @@ namespace TicTacToeBasic.TicTacToeControl
                    || AreAllElementsSameAsToken(board.GetDiagonalRightToLeft(), token);
         }
 
-        private static bool AreAllElementsSameAsToken(Token[] arrayToCheck, Token token)
+        private static bool AreAllElementsSameAsToken(IEnumerable<Token> arrayToCheck, Token token)
         {
             return arrayToCheck.All(t => t == token);
         }
