@@ -10,7 +10,7 @@ namespace TicTacToeBasic.TicTacToeControl
         private Game TicTacToe { get; }
         private readonly IOutputWriter _outputWriter;
         private readonly IInputReader _inputReader;
-        public Player CurrentPlayer { get; private set; }
+        private const int MaximumTokensOnBoard = 9;
         
         public GameController(Game game, IOutputWriter outputWriter, IInputReader inputReader)
         {
@@ -26,73 +26,52 @@ namespace TicTacToeBasic.TicTacToeControl
             while (!TicTacToe.IsEnded)
             {
                 ConductTurn();
-                if (WinDecider.IsWinner(TicTacToe.GameBoard, CurrentPlayer))
+                if (WinDecider.IsWinner(TicTacToe.GameBoard, TicTacToe.CurrentPlayer))
                 {
                     _outputWriter.AnnounceWinner();
                     TicTacToe.IsEnded = true;
                 }
-                if (NumberOfTokensOnBoard() == 9)
+                if (NumberOfTokensOnBoard() >= MaximumTokensOnBoard)
                 {
                     _outputWriter.BoardIsFull();
                     TicTacToe.IsEnded = true;
                 }
                 _outputWriter.PrintBoard(TicTacToe.GameBoard);
+                TicTacToe.SwitchCurrentPlayer();
+
             }
         }
 
         private void ConductTurn()
         {
-            SetCurrentPlayer();
             var inputAccepted = false;
             while (!inputAccepted)
             {
-                _outputWriter.InputPrompt(CurrentPlayer);
+                _outputWriter.InputPrompt(TicTacToe.CurrentPlayer);
                 var playerInput = _inputReader.ReadPlayerInput();
-                
+
                 if (InputValidator.IsValidInputFormat(playerInput))
-                    inputAccepted = TryAndPlaceTokenOnBoard(playerInput);
-                
+                {
+                    try
+                    {
+                        TicTacToe.PlaceCurrentPlayerTokenOnBoard(playerInput);
+                        _outputWriter.MoveAccepted();
+                        inputAccepted = true;
+                    }
+                    catch (InvalidDataException e)
+                    {
+                        _outputWriter.ErrorPrompt(e.Message);
+                    }
+                }
                 else
                     _outputWriter.ErrorPrompt("Invalid Input!!");
                 if (InputValidator.IsQuit(playerInput))
                 {
-                    _outputWriter.PlayerQuit(CurrentPlayer.PlayerName);
+                    _outputWriter.PlayerQuit(TicTacToe.CurrentPlayer.PlayerName);
                     TicTacToe.IsEnded = true;
                     inputAccepted = true;
                 }
             }
-        }
-
-        private bool TryAndPlaceTokenOnBoard(string playerInput)
-        {
-            var success = true;
-            try
-            {
-                var coOrdinates = ParseInputIntoCoOrdinates(playerInput);
-                TicTacToe.GameBoard.PlaceToken(coOrdinates[0], coOrdinates[1], CurrentPlayer.PlayerToken);
-                _outputWriter.MoveAccepted();
-            }
-            catch (InvalidDataException e)
-            {
-                _outputWriter.ErrorPrompt(e.Message);
-                success = false;
-            }
-            return success;
-        }
-        
-        private static int[] ParseInputIntoCoOrdinates(string location)
-        {
-            return location.Split(',').Select(int.Parse).ToArray();
-        }
-        
-        private void SetCurrentPlayer()
-        {
-            CurrentPlayer = IsPlayerOneTurn() ? TicTacToe.Player1 : TicTacToe.Player2;
-        }
-
-        private bool IsPlayerOneTurn()
-        {
-            return (NumberOfTokensOnBoard() % 2 == 0);
         }
 
         private int NumberOfTokensOnBoard()

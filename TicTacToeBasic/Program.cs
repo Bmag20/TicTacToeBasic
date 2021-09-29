@@ -11,8 +11,11 @@ namespace TicTacToeBasic
         {
             IInputReader inputHandler = new ConsoleReader();
             IOutputWriter outputHandler = new ConsolePrinter();
-            Game game = new Game();
-            GameController gameController = new GameController(game, outputHandler, inputHandler);
+            var board = new Board();
+            var player1 = new Player(Token.X, "Player 1");
+            var player2 = new Player(Token.O, "Player 2");
+            var game = new Game(board, player1, player2);
+            var gameController = new GameController(game, outputHandler, inputHandler);
             gameController.ConductGame();
         }
     }
