@@ -7,13 +7,11 @@ namespace TicTacToeBasic.TicTacToeControl
 {
     public class GameController
     {
-        public Game TicTacToe { get; set; }
+        private Game TicTacToe { get; }
         private readonly IOutputWriter _outputWriter;
         private readonly IInputReader _inputReader;
         public Player CurrentPlayer { get; private set; }
-
-
-
+        
         public GameController(Game game, IOutputWriter outputWriter, IInputReader inputReader)
         {
             TicTacToe = game;
@@ -53,6 +51,7 @@ namespace TicTacToeBasic.TicTacToeControl
                 
                 if (InputValidator.IsValidInputFormat(playerInput))
                     inputAccepted = TryAndPlaceTokenOnBoard(playerInput);
+                
                 else
                     _outputWriter.ErrorPrompt("Invalid Input!!");
                 if (InputValidator.IsQuit(playerInput))

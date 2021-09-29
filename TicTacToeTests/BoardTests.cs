@@ -32,7 +32,7 @@ namespace TicTacToeTests
         [InlineData(1, 1, Token.X)]
         [InlineData(1, 2, Token.O)]
         [InlineData(3, 3, Token.X)]
-        public void PlacingTokenOnEmptySlot_changesStateOfTheCell(int x, int y, Token token)
+        public void PlacingTokenOnEmptySlot_ChangesStateOfTheCell(int x, int y, Token token)
         {
             Board board = new Board();
             board.PlaceToken(x, y, token);
