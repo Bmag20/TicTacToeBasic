@@ -1,4 +1,3 @@
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 
@@ -6,8 +5,8 @@ namespace TicTacToeBasic.Entities
 {
     public class Board
     {
-        private Token[,] _cells;
-        public const int Size = 3;
+        private readonly Token[,] _cells;
+        private const int Size = 3;
         public Board()
         {
             _cells = new Token[Size, Size];

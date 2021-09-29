@@ -5,9 +5,9 @@ namespace TicTacToeBasic.InputOutput
     public static class InputValidator
     {
 
-        public static bool IsValidInput(string playerInput)
+        public static bool IsValidInputFormat(string playerInput)
         {
-            return Regex.IsMatch(playerInput, "^[1-3],[1-3]$");
+            return Regex.IsMatch(playerInput, "^\\d,\\d$");
         }
 
         public static bool IsQuit(string playerInput)

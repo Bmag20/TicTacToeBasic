@@ -1,5 +1,7 @@
 ﻿using System;
+using TicTacToeBasic.Entities;
 using TicTacToeBasic.InputOutput;
+using TicTacToeBasic.TicTacToeControl;
 
 namespace TicTacToeBasic
 {
@@ -12,7 +14,7 @@ namespace TicTacToeBasic
             IOutputWriter outputHandler = new ConsolePrinter();
             Game game = new Game();
             GameController gameController = new GameController(game, outputHandler, inputHandler);
-            gameController.StartGame();
+            gameController.ConductGame();
         }
     }
 }
