@@ -6,11 +6,13 @@ namespace TicTacToeBasic.TicTacToeControl
 {
     public static class WinDecider
     {
+        private const int MinimumTokensForAWin = 5;
         public static bool IsWinner(Board board, Player player)
         {
-            return IsHorizontalWin(board, player.PlayerToken)
+            return board.NumberOfTokensPlaced >= MinimumTokensForAWin &&
+                   (IsHorizontalWin(board, player.PlayerToken)
                    || IsVerticalWin(board, player.PlayerToken)
-                   || IsDiagonalWin(board, player.PlayerToken);
+                   || IsDiagonalWin(board, player.PlayerToken));
         }
 
         private static bool IsHorizontalWin(Board board, Token token)
@@ -20,7 +22,6 @@ namespace TicTacToeBasic.TicTacToeControl
                 if (AreAllElementsSameAsToken(board.GetColumn(i), token))
                     return true;
             }
-
             return false;
         }
 
@@ -31,7 +32,6 @@ namespace TicTacToeBasic.TicTacToeControl
                 if (AreAllElementsSameAsToken(board.GetRow(i), token))
                     return true;
             }
-
             return false;
         }
 

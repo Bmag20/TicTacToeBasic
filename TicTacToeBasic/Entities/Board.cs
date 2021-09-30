@@ -7,9 +7,12 @@ namespace TicTacToeBasic.Entities
     {
         private readonly Token[,] _cells;
         private const int Size = 3;
+        public int NumberOfTokensPlaced { get; private set; }
+
         public Board()
         {
             _cells = new Token[Size, Size];
+            NumberOfTokensPlaced = 0;
         }
         
         public Token[,] GetCells()
@@ -27,6 +30,7 @@ namespace TicTacToeBasic.Entities
             if (!IsEmptySlot(x, y))
                 throw new InvalidDataException($"Oh no, a piece is already at this place!");
             _cells[x - 1, y - 1] = token;
+            NumberOfTokensPlaced++;
         }
 
         private static bool IsValidSlot(int x, int y)
@@ -37,6 +41,11 @@ namespace TicTacToeBasic.Entities
         private bool IsEmptySlot(int x, int y)
         {
             return (_cells[x - 1, y - 1].Equals(Token.None));
+        }
+
+        public bool IsFull()
+        {
+            return NumberOfTokensPlaced == (Size * Size);
         }
 
         public Token[] GetColumn(int columnNumber)

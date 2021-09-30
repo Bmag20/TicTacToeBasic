@@ -7,10 +7,10 @@ namespace TicTacToeBasic.InputOutput
         void WelcomeMessage();
         void PrintBoard(Board board);
         void MoveAccepted();
-        void AnnounceWinner();
+        void AnnounceWinner(string playerName);
         void ErrorPrompt(string errorMessage);
         void BoardIsFull();
         void InputPrompt(Player player);
-        void PlayerQuit(string playerName);
+        void PlayerQuit();
     }
 }

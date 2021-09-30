@@ -23,31 +23,25 @@ namespace TicTacToeBasic.TicTacToeControl
         {
             _outputWriter.WelcomeMessage();
             _outputWriter.PrintBoard(TicTacToe.GameBoard);
-            while (!TicTacToe.IsEnded)
+            while (!TicTacToe.IsEnded())
             {
                 ConductTurn();
-                if (WinDecider.IsWinner(TicTacToe.GameBoard, TicTacToe.CurrentPlayer))
-                {
-                    _outputWriter.AnnounceWinner();
-                    TicTacToe.IsEnded = true;
-                }
-                if (NumberOfTokensOnBoard() >= MaximumTokensOnBoard)
-                {
-                    _outputWriter.BoardIsFull();
-                    TicTacToe.IsEnded = true;
-                }
-                _outputWriter.PrintBoard(TicTacToe.GameBoard);
+                TicTacToe.CheckForWinner();
                 TicTacToe.SwitchCurrentPlayer();
-
             }
+            if (TicTacToe.GameBoard.IsFull())
+                _outputWriter.BoardIsFull();
+            else
+                _outputWriter.AnnounceWinner(TicTacToe.Winner.PlayerName);
         }
 
+        // too lengthy
         private void ConductTurn()
         {
             var inputAccepted = false;
             while (!inputAccepted)
             {
-                _outputWriter.InputPrompt(TicTacToe.CurrentPlayer);
+                _outputWriter.InputPrompt(TicTacToe.CurrentPlayer); // rename
                 var playerInput = _inputReader.ReadPlayerInput();
 
                 if (InputValidator.IsValidInputFormat(playerInput))
@@ -63,25 +57,16 @@ namespace TicTacToeBasic.TicTacToeControl
                         _outputWriter.ErrorPrompt(e.Message);
                     }
                 }
-                else
-                    _outputWriter.ErrorPrompt("Invalid Input!!");
-                if (InputValidator.IsQuit(playerInput))
+                else if (InputValidator.IsQuit(playerInput))
                 {
-                    _outputWriter.PlayerQuit(TicTacToe.CurrentPlayer.PlayerName);
-                    TicTacToe.IsEnded = true;
+                    TicTacToe.CurrentPlayerQuit();
+                    _outputWriter.PlayerQuit();
                     inputAccepted = true;
                 }
+                else
+                    _outputWriter.ErrorPrompt("Invalid Input!!");
             }
-        }
-
-        private int NumberOfTokensOnBoard()
-        {
-            int tokensCount = 0;
-            for (int i = 1; i <= TicTacToe.GameBoard.GetSize(); i++)
-            {
-                tokensCount += TicTacToe.GameBoard.GetRow(i).Count(token => token != Token.None);
-            }
-            return tokensCount;
+            _outputWriter.PrintBoard(TicTacToe.GameBoard);
         }
         
     }

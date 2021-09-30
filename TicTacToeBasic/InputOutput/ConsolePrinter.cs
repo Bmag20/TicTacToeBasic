@@ -21,8 +21,8 @@ namespace TicTacToeBasic.InputOutput
             }
         }
 
-        public void MoveAccepted() => Console.Write("Move accepted, ");
-        public void AnnounceWinner() => Console.WriteLine("well done you've won the game!");
+        public void MoveAccepted() => Console.Write("Move accepted! ");
+        public void AnnounceWinner(string playerName) => Console.WriteLine($"{playerName} won the game!");
         public void ErrorPrompt(string errorMessage) => Console.WriteLine($"{errorMessage} Try again...");
         public void BoardIsFull() => Console.WriteLine("All fields are taken on the board! It's a draw!!");
 
@@ -32,6 +32,6 @@ namespace TicTacToeBasic.InputOutput
                           $"or enter 'q' to give up: ");
         }
 
-        public void PlayerQuit(string playerName) => Console.WriteLine($"You quit the game! {playerName} lost!");
+        public void PlayerQuit() => Console.WriteLine($"You quit the game!");
     }
 }
