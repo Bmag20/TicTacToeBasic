@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace TicTacToeBasic.Entities
 {
     public class Game
@@ -7,16 +9,33 @@ namespace TicTacToeBasic.Entities
         public Player Player2 { get;  }
         public bool IsEnded { get; set; }
         // current player
-        
+        public Player CurrentPlayer { get; private set; }
+
         // Remove dependencies
-        public Game()
+        public Game(Board board, Player player1, Player player2)
         {
-            GameBoard = new Board();
-            Player1 = new Player(Token.X, "Player 1");
-            Player2 = new Player(Token.O, "Player 2");
+            GameBoard = board;
+            Player1 = player1;
+            Player2 = player2;
             IsEnded = false;
+            CurrentPlayer = Player1;
+        }
+
+        public void PlaceCurrentPlayerTokenOnBoard(string playerInput)
+        {
+            var coOrdinates = ParseInputIntoCoOrdinates(playerInput); 
+            GameBoard.PlaceToken(coOrdinates[0], coOrdinates[1], CurrentPlayer.PlayerToken);
         }
         
-        // place token
+        private static int[] ParseInputIntoCoOrdinates(string location)
+        {
+            return location.Split(',').Select(int.Parse).ToArray();
+        }
+
+        public void SwitchCurrentPlayer()
+        {
+            CurrentPlayer = (CurrentPlayer == Player1) ? Player2 : Player1;
+        }
+        
     }
 }
